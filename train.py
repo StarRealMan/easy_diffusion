@@ -12,12 +12,13 @@ if __name__ == "__main__":
     args = config.load_parser()
     pl.seed_everything(args.seed)
     
-    model = MInterface(args)
+    # model = MInterface(args)
+    model = MInterface.load_from_checkpoint(args.ckpts_dir, args = args)
     data_model = DInterface(args)
     
     ckpt_cb = ModelCheckpoint(dirpath=f'{args.ckpts_dir}/{args.exp_name}', 
                               filename='{epoch:d}', 
-                              save_top_k=1,
+                              save_top_k=-1,
                               every_n_epochs=args.every_n_epochs, 
                               save_on_train_epoch_end = True)
     

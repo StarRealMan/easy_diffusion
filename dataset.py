@@ -34,7 +34,7 @@ class pokemon_dataset(data.Dataset):
 if __name__ == "__main__":
     path = "/home/star/Dataset/pokemon"
     dataset = pokemon_dataset(path)
-    dataloader = data.DataLoader(dataset, batch_size = 32, shuffle = True)
+    dataloader = data.DataLoader(dataset, batch_size = 16, shuffle = True)
     
     print(len(dataset))
     print(len(dataloader))
