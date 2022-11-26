@@ -12,8 +12,11 @@ if __name__ == "__main__":
     args = config.load_parser()
     pl.seed_everything(args.seed)
     
-    # model = MInterface(args)
-    model = MInterface.load_from_checkpoint(args.ckpts_dir, args = args)
+    if os.path.exists(args.ckpts_dir):
+        model = MInterface.load_from_checkpoint(args.ckpts_dir, args = args)
+    else:
+        model = MInterface(args)
+        
     data_model = DInterface(args)
     
     ckpt_cb = ModelCheckpoint(dirpath=f'{args.ckpts_dir}/{args.exp_name}', 
@@ -24,7 +27,11 @@ if __name__ == "__main__":
     
     pbar = TQDMProgressBar(refresh_rate=1)
     
-    logger = TensorBoardLogger(save_dir = os.path.join(os.getcwd(), "logs"), 
+    log_save_dir = os.path.join(args.default_root_dir, "logs")
+    if not os.path.exists(log_save_dir):
+        os.makedirs(log_save_dir)
+    
+    logger = TensorBoardLogger(save_dir = log_save_dir, 
                                name = args.exp_name, 
                                log_graph = False)
     

@@ -24,13 +24,13 @@ def load_parser():
     # Trainer arguments
     parser.add_argument('--accelerator', type = str, default = "gpu")
     parser.add_argument('--gpus', type = int, default = 1)
-    parser.add_argument('--max_epochs', type = int, default = 3000)
+    parser.add_argument('--max_epochs', type = int, default = 100)
     parser.add_argument('--default_root_dir', type = str, default = os.getcwd())
     parser.add_argument('--num_sanity_val_steps', type = int, default = 0)
-    parser.add_argument('--val_check_interval', type = int, default = 10)
+    parser.add_argument('--val_check_interval', type = float, default = 0.5)
     parser.add_argument('--log_every_n_steps', type = int, default = 10)
-    parser.add_argument('--limit_val_batches', type = int, default = 0)
-    parser.add_argument('--every_n_epochs', type = int, default = 300)
+    parser.add_argument('--limit_val_batches', type = float, default = 0.5)
+    parser.add_argument('--every_n_epochs', type = int, default = 20)
     
     args = parser.parse_args()
     args.ckpts_dir = os.path.join(args.ckpts_dir, args.exp_name, 

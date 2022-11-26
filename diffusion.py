@@ -33,7 +33,9 @@ class Diffusion():
     def loss(self, x_0, z_bar):
         batch_size = x_0.shape[0]
         t = torch.randint(1, self.T + 1, size=(batch_size, ), device=self.device)
+        
         x_t = self.loss_coe_0[t-1] * x_0 + self.loss_coe_1[t-1] * z_bar
+        
         loss = self.objective(self.model(x_t, t-1), z_bar)
         
         return loss
@@ -45,6 +47,10 @@ class Diffusion():
             t = torch.tensor([t] * batch_size).to(self.device)
             
             x_0_hat = self.p_sample_coe_0[t-1] * x_t - self.P_sample_coe_1[t-1] * self.model(x_t, t-1)
+            
+            if t[0] == 1:
+                z_bar = torch.zeros_like(z_bar)
+                
             x_t = self.q_sample_coe_0[t-1] * x_0_hat + self.q_sample_coe_1[t-1] * x_t + self.q_sample_var[t-1] * z_bar
 
         x_0 = x_t

@@ -1,5 +1,5 @@
 # User-defined arguments
-exp_name default = "test_exp"
+exp_name = "test_exp"
 data_path "/home/star/Dataset/pokemon"
 image_size = 256
 batch_size = 16
@@ -9,7 +9,7 @@ lr = 5e-4
 lr_scheduler = 'step'
 lr_decay_steps = 20
 lr_decay_rate = 0.5
-lr_decay_min_lr = 5e-4
+lr_decay_min_lr = 5e-5
 ckpts_dir = "ckpts/"
 ckpts_epoch = 0
 prediction_dir = "predictions/"
@@ -17,9 +17,9 @@ prediction_dir = "predictions/"
 # Trainer arguments
 accelerator = "gpu"
 gpus = 1
-max_epochs = 3000
+max_epochs = 100
 num_sanity_val_steps = 0
-val_check_interval = 10
+val_check_interval = 1.0
 log_every_n_steps = 10
-limit_val_batches = 0
-every_n_epochs = 300
+limit_val_batches = 0.5
+every_n_epochs = 20

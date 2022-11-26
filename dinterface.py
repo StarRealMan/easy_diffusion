@@ -15,9 +15,9 @@ class DInterface(LightningDataModule):
     def setup(self, stage = None):
         if stage == "fit":
             self.train_dataset = pokemon_dataset(self.data_path, self.image_size)
-            self.val_dataset = pokemon_dataset(self.data_path, self.image_size)
+            self.val_dataset = pokemon_dataset(self.data_path, self.image_size, "test")
         else:
-            self.test_dataset = pokemon_dataset(self.data_path, self.image_size)
+            self.test_dataset = pokemon_dataset(self.data_path, self.image_size, "test")
    
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size = self.batch_size, 

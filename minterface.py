@@ -9,6 +9,12 @@ from pytorch_lightning import LightningModule
 from model import UNet
 from diffusion import Diffusion
 
+def vis(img):
+    img = torch.nan_to_num(img)
+    img = (img - img.min()) / (img.max() - img.min() + 1e-8)
+    img = (255 * img).int()
+    return img
+
 class MInterface(LightningModule):
     def __init__(self, args):
         super().__init__()
@@ -47,12 +53,19 @@ class MInterface(LightningModule):
         z_bar = torch.randn_like(item_image)
         loss = self.diffu.loss(item_image, z_bar)
         
+        self.log("train loss", loss.item())
+        
         return loss
 
     def validation_step(self, batch, batch_idx):
         x_T = torch.randn(self.batch_size, 3, self.image_size, self.image_size).to(self.device)
         z_bar = torch.randn_like(x_T)
         x_0 = self.diffu.sample(x_T, z_bar)
+        
+        img_size = x_0.shape[0]
+        for img_num in range(img_size):
+            img = x_0[img_num]
+            self.logger.experiment.add_image('val vis' + str(img_num), vis(img))
         
         return x_0
         
