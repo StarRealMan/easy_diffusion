@@ -9,9 +9,9 @@ from pytorch_lightning import LightningModule
 from model import UNet
 from diffusion import Diffusion
 
-def vis(img):
-    img = torch.nan_to_num(img)
-    img = (img - img.min()) / (img.max() - img.min() + 1e-8)
+def vis_image(image):
+    image = torch.nan_to_num(image)
+    image = (image + 1.0) / 2.0
     img = (255 * img).int()
     return img
 
@@ -49,7 +49,7 @@ class MInterface(LightningModule):
         return [optimizer], [scheduler]
     
     def training_step(self, batch, batch_idx):
-        pokemon, item_image = batch
+        item_image, pokemon_num, pokemon = batch
         z_bar = torch.randn_like(item_image)
         loss = self.diffu.loss(item_image, z_bar)
         
@@ -65,7 +65,7 @@ class MInterface(LightningModule):
         img_size = x_0.shape[0]
         for img_num in range(img_size):
             img = x_0[img_num]
-            self.logger.experiment.add_image('val vis' + str(img_num), vis(img))
+            self.logger.experiment.add_image('val vis ' + str(img_num), vis_image(img))
         
         return x_0
         

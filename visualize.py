@@ -13,10 +13,7 @@ image_size = results.shape[0]
 for image_num in tqdm(range(image_size)):
     image = results[image_num]
     
-    print(image.min())
-    print(image.max())
-    
-    image = (image - image.min()) / (image.max() - image.min())
+    image = (image - 1.0) / 2.0
     image = (image * 255).astype(np.uint8)
     
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)

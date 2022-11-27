@@ -14,6 +14,8 @@ class pokemon_dataset(data.Dataset):
             transforms.Resize(size),
             transforms.CenterCrop(size)
         ])
+        
+        scale = lambda x: (x - 0.5) * 2.0
             
         self.items = []
         
@@ -22,15 +24,17 @@ class pokemon_dataset(data.Dataset):
                 self.items.append((torch.randn(1), torch.randn(1)))
             
         else:
-            for pokemon in tqdm(os.listdir(path)[:], desc = "Loading pokemon type:"):
+            for pokemon_num, pokemon in enumerate(tqdm(os.listdir(path)[:], 
+                                             desc = "Loading pokemon type:")):
                 pokemon_path = os.path.join(path, pokemon)
-                for item in os.listdir(pokemon_path)[:]:
+                for item in os.listdir(pokemon_path)[:1]:
                     file_type = item.split('.')[-1]
                     if file_type == "jpg" or file_type == "jpeg" or file_type == "png":
                         item_path = os.path.join(pokemon_path, item)
                         item_image = cv2.imread(item_path, cv2.IMREAD_COLOR)
                         item_image = trans(item_image)
-                        self.items.append((pokemon, item_image))
+                        item_image = scale(item_image)
+                        self.items.append((item_image, pokemon_num, pokemon))
     
     def __getitem__(self, index):
         return self.items[index]
@@ -47,6 +51,9 @@ if __name__ == "__main__":
     print(len(dataloader))
     
     for data in dataloader:
-        pokemon, item = data
+        image, pokemon_num, pokemon = data
         print(pokemon)
-        print(item.shape)
+        print(pokemon_num)
+        print(image.min())
+        print(image.max())
+        print(image.shape)
