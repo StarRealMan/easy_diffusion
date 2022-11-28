@@ -19,7 +19,7 @@ class Diffusion():
         self.loss_coe_1 = torch.sqrt(1 - alpha_bar).view(-1, 1, 1, 1)
         
         self.p_sample_coe_0 = torch.sqrt(1 / alpha_bar).view(-1, 1, 1, 1)
-        self.P_sample_coe_1 = torch.sqrt(1 / alpha_bar - 1).view(-1, 1, 1, 1)
+        self.p_sample_coe_1 = torch.sqrt(1 / alpha_bar - 1).view(-1, 1, 1, 1)
         
         self.q_sample_coe_0 = (torch.sqrt(alpha_bar_prev) * beta / (1 - alpha_bar)).view(-1, 1, 1, 1)
         self.q_sample_coe_1 = (torch.sqrt(alpha) * (1. - alpha_bar_prev) / (1. - alpha_bar)).view(-1, 1, 1, 1)
@@ -46,7 +46,15 @@ class Diffusion():
         for t in tqdm(range(self.T, 0, -1)):
             t = torch.tensor([t] * batch_size).to(self.device)
             
-            x_0_hat = self.p_sample_coe_0[t-1] * x_t - self.P_sample_coe_1[t-1] * self.model(x_t, t-1)
+            x_0_hat = self.p_sample_coe_0[t-1] * x_t - self.p_sample_coe_1[t-1] * self.model(x_t, t-1)
+            
+            # print(self.p_sample_coe_0[t-1][0])
+            # print(self.model(x_t, t-1).mean())
+            
+            # print(self.p_sample_coe_1[t-1][0])
+            # print(x_t.mean())
+            
+            # print(x_0_hat.mean())
             
             if t[0] == 1:
                 z_bar = torch.zeros_like(z_bar)

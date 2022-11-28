@@ -12,8 +12,8 @@ from diffusion import Diffusion
 def vis_image(image):
     image = torch.nan_to_num(image)
     image = (image + 1.0) / 2.0
-    img = (255 * img).int()
-    return img
+    image = (255 * image).int()
+    return image
 
 class MInterface(LightningModule):
     def __init__(self, args):
